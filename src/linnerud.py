@@ -1,7 +1,7 @@
 import pandas as pd 
 import matplotlib.pyplot as plt 
 from sklearn import datasets 
-from ConvexHull import ConvexHull
+from ConvexHull import myConvexHull
 
 data = datasets.load_linnerud() 
 
@@ -18,7 +18,7 @@ plt.xlabel(data.feature_names[0])
 plt.ylabel(data.feature_names[1])
 for i in range(len(data.target_names)):
     bucket = df.iloc[:,[0,1]].values
-    x, y = ConvexHull(bucket)
+    x, y = myConvexHull(bucket)
     plt.scatter(bucket[:, 0], bucket[:, 1], label=data.target_names[i])
     plt.plot(x, y, colors[i])
 plt.legend()

@@ -71,7 +71,7 @@ def ConvexHullBot(bucket, p1, pn) :
         return []
 
 # Implementasi ConvexHull
-def ConvexHull(bucket) :
+def myConvexHull(bucket) :
     bucketlist = bucket.tolist()
 
     p1 = bucketlist[0]
