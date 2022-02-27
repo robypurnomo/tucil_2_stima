@@ -20,7 +20,6 @@ plt.ylabel(data.feature_names[1])
 for i in range(len(data.target_names)):
     bucket = df[df['Target'] == i]
     bucket = bucket.iloc[:,[2,3]].values
-    print(bucket)
     x, y = ConvexHull(bucket)
     plt.scatter(bucket[:, 0], bucket[:, 1], label=data.target_names[i])
     plt.plot(x, y, colors[i%2])
