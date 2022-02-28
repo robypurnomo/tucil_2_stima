@@ -19,7 +19,7 @@ Sebuah pustaka (library) myConvexHull dalam bahasa Python yang dapat mengembalik
 │   └───main.py
 ├───docs
 │   ├───Laporan Tugas Kecil 2.pdf
-│   └───Laporan Tugas Kecil 2.pdf
+│   └───Laporan Tugas Kecil 2.docx
 ├───testing
 └───README.md
 ```
