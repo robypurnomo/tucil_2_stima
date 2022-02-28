@@ -1,8 +1,5 @@
 import numpy as np
-import pandas as pd 
-from sklearn import datasets 
-from scipy.spatial import ConvexHull
-
+from math import atan2, pi
 
 # Mengecek letak titik pada zona atas atau bawah atau pada garis
 def zoneCheck(p1, pn, p) :
@@ -13,7 +10,7 @@ def zoneCheck(p1, pn, p) :
     y2 = pn[1]
     y3 = p[1]
     det = x1*y2 + x3*y1 + x2*y3 - x3*y2 - x2*y1 - x1*y3
-    if det == 0 :
+    if det == 0 or x3 < x1 or x3 > x2 or (x3 == x1 and x3 == x2 and y3 == y1 and y3 == y2):
         return 0
     elif det > 0 :
         return 1
@@ -27,20 +24,25 @@ def distance(pa, pb, px) :
     px = np.array(px)
     return abs(np.linalg.norm(np.cross(pb-pa, pa-px))/np.linalg.norm(pb-pa))
 
+# Menghitung sudut diantara tiga titik
+def angle(p1, pmax, pn) :
+    x1, y1 = p1[0] - pmax[0], p1[1] - pmax[1]
+    x3, y3 = pn[0] - pmax[0], pn[1] - pmax[1]
+    a = atan2(y1, x1)
+    c = atan2(y3, x3)
+    if a < 0: a += pi*2
+    if c < 0: c += pi*2
+    return (pi*2 + c - a) if a > c else (c - a)
+
 # ConvexHull untuk bagian Top
 def ConvexHullTop(bucket, p1, pn) :
-    x1 = p1[0]
-    x2 = pn[0]
-    y1 = p1[1]
-    y2 = pn[1]
     idx = -1
     dis = 0
     for i in range (len(bucket)) :
-        x = bucket[i][0]
-        y = bucket[i][1]
-        if zoneCheck(p1, pn, bucket[i]) == 1 and distance(pn, p1, bucket[i]) > dis and (x >= x1 and x <= x2) and not (x == x1 and x == x2 and y == y1 and y == y2):
-            dis = distance(pn, p1, bucket[i])
-            idx = i
+        if zoneCheck(p1, pn, bucket[i]) == 1 :
+            if distance(pn, p1, bucket[i]) > dis or (distance(pn, p1, bucket[i]) == dis and dis != 0 and angle(p1, bucket[i], pn) > angle(p1, bucket[idx], pn)) :
+                dis = distance(pn, p1, bucket[i])
+                idx = i
     if idx != -1 :
         left = ConvexHullTop(bucket, p1, bucket[idx])
         right = ConvexHullTop(bucket, bucket[idx], pn)
@@ -50,19 +52,14 @@ def ConvexHullTop(bucket, p1, pn) :
 
 # ConvexHull untuk bagian Bot
 def ConvexHullBot(bucket, p1, pn) :
-    x1 = p1[0]
-    x2 = pn[0]
-    y1 = p1[1]
-    y2 = pn[1]
     idx = -1
-    dis = 0.01
+    dis = 0
     
     for i in range (len(bucket)) :
-        x = bucket[i][0]
-        y = bucket[i][1]
-        if (distance(p1, pn, bucket[i]) > dis and zoneCheck(p1, pn, bucket[i]) == -1 ) and (x >= x1 and x <= x2) and not (x == x1 and x == x2 and y == y1 and y == y2):
-            dis = distance(p1, pn, bucket[i])
-            idx = i
+        if zoneCheck(p1, pn, bucket[i]) == -1 :
+            if distance(p1, pn, bucket[i]) > dis or (distance(pn, p1, bucket[i]) == dis and dis != 0 and angle(p1, bucket[i], pn) > angle(p1, bucket[idx], pn)) : 
+                dis = distance(p1, pn, bucket[i])
+                idx = i
     if idx != -1 :
         left = ConvexHullBot(bucket, p1, bucket[idx])
         right = ConvexHullBot(bucket, bucket[idx], pn)
