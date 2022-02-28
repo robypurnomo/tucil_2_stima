@@ -18,5 +18,5 @@ Pastikan sudah menginstal python dan dependencies yang dibutuhkan.
 Lalu buka command prompt dan pergi ke directory "src/" dan lakukan command di bawah
 
 ```
-python iris.py
+python main.py
 ```
