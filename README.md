@@ -7,8 +7,21 @@ Sebuah pustaka (library) myConvexHull dalam bahasa Python yang dapat mengembalik
 ## Modul
 
 ```
--- src
--- testing
+├───src
+│   ├───lib
+│   │   ├───convexHull
+│   │   │   └───ConvexHull.py
+│   |   ├───iris.py
+│   |   ├───breast_cancer.py
+│   |   ├───digits.py
+│   |   ├───wine.py
+│   |   └───linnerud.py
+│   └───main.py
+├───docs
+│   ├───Laporan Tugas Kecil 2.pdf
+│   └───Laporan Tugas Kecil 2.pdf
+├───testing
+└───README.md
 ```
 
 ## Cara Menjalankan
