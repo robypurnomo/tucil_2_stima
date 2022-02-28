@@ -16,7 +16,7 @@ def breast_cancer() :
     # visualisasi ConvexHull
     plt.figure(figsize = (10, 6))
     colors = ['b','r','g']
-    plt.title('petal Width vs petal Length')
+    plt.title('mean radius vs mean texture')
     plt.xlabel(data.feature_names[0])
     plt.ylabel(data.feature_names[1])
     for i in range(len(data.target_names)):

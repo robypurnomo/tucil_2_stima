@@ -34,35 +34,24 @@ def angle(p1, pmax, pn) :
     if c < 0: c += pi*2
     return (pi*2 + c - a) if a > c else (c - a)
 
-# ConvexHull untuk bagian Top
-def ConvexHullTop(bucket, p1, pn) :
+# ConvexHull Recursive
+def ConvexHullRec(bucket, p1, pn, value) :
     idx = -1
     dis = 0
     for i in range (len(bucket)) :
-        if zoneCheck(p1, pn, bucket[i]) == 1 :
-            if distance(pn, p1, bucket[i]) > dis or (distance(pn, p1, bucket[i]) == dis and dis != 0 and angle(p1, bucket[i], pn) > angle(p1, bucket[idx], pn)) :
-                dis = distance(pn, p1, bucket[i])
-                idx = i
+        if distance(pn, p1, bucket[i]) > dis or (distance(pn, p1, bucket[i]) == dis and dis != 0 and angle(p1, bucket[i], pn) > angle(p1, bucket[idx], pn)) :
+            dis = distance(pn, p1, bucket[i])
+            idx = i
     if idx != -1 :
-        left = ConvexHullTop(bucket, p1, bucket[idx])
-        right = ConvexHullTop(bucket, bucket[idx], pn)
-        return left + [bucket[idx]] + right
-    else :
-        return []
-
-# ConvexHull untuk bagian Bot
-def ConvexHullBot(bucket, p1, pn) :
-    idx = -1
-    dis = 0
-    
-    for i in range (len(bucket)) :
-        if zoneCheck(p1, pn, bucket[i]) == -1 :
-            if distance(p1, pn, bucket[i]) > dis or (distance(pn, p1, bucket[i]) == dis and dis != 0 and angle(p1, bucket[i], pn) > angle(p1, bucket[idx], pn)) : 
-                dis = distance(p1, pn, bucket[i])
-                idx = i
-    if idx != -1 :
-        left = ConvexHullBot(bucket, p1, bucket[idx])
-        right = ConvexHullBot(bucket, bucket[idx], pn)
+        bucketleft = []
+        bucketright = []
+        for i in range (len(bucket)) :
+            if zoneCheck(p1, bucket[idx], bucket[i]) == value :
+                bucketleft.append(bucket[i])
+            if zoneCheck(bucket[idx], pn, bucket[i]) == value :
+                bucketright.append(bucket[i])
+        left = ConvexHullRec(bucketleft, p1, bucket[idx], value)
+        right = ConvexHullRec(bucketright, bucket[idx], pn, value)
         return left + [bucket[idx]] + right
     else :
         return []
@@ -83,11 +72,19 @@ def myConvexHull(bucket) :
         elif (bucketlist[i][0] == pn[0] and bucketlist[i][1] > pn[0]) :
             pn = bucketlist[i]
 
+    buckettop = []
+    bucketbot = []
+    for i in range (len(bucket)) :
+        if zoneCheck(p1, pn, bucket[i]) == 1 :
+            buckettop.append(bucket[i])
+        elif zoneCheck(p1, pn, bucket[i]) == -1 :
+            bucketbot.append(bucket[i])
+
     array_point_top = [p1]
     array_point_bot = [p1]
 
-    top = ConvexHullTop(bucket, p1, pn)
-    bot = ConvexHullBot(bucket, p1, pn)
+    top = ConvexHullRec(buckettop, p1, pn, 1)
+    bot = ConvexHullRec(bucketbot, p1, pn, -1)
 
     array_point_top += top + [pn]
     array_point_bot += bot + [pn]
