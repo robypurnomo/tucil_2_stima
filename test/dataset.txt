@@ -1,0 +1,5 @@
+iris
+breast_cancer
+digits
+linnerud
+wine
